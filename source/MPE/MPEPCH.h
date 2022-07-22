@@ -11,29 +11,19 @@
 #include <algorithm>
 #include <functional>
 
-// STRING & STRING MANIPULATION
+// STRING, STRING MANIPULATION, FILE MANIPULATION
 #include <string>
 #include <sstream>
+#include <fstream>
+#include <filesystem>
 
 // DATA STRUCTURES
+#include <array>
 #include <vector>
 #include <unordered_map>
 #include <unordered_set>
 
-// SPDLOG
-#include "spdlog/spdlog.h"
-#include "spdlog/fmt/ostr.h"
-
-//#include <>
-// GRAPHICS
-#include <glad/glad.h>
-#include <GLFW/glfw3.h>
-
-// IMGUI
-#include "imgui.h"
-#define IMGUI_IMPL_OPENGL_LOADER_GLAD
-#include "imgui_impl_glfw.h"
-#include "imgui_impl_opengl3.h"
-
 // MPE
-//#include "base/Log.h"
+#include "MPE/Base/_CORE.h"
+#include "MPE/Base/_TIME.h"
+#include "MPE/Base/Log.h"

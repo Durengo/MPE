@@ -1,7 +1,10 @@
-#include "App.h"
 #include "MPE/MPEPCH.h"
-#include "Input.h"
-#include "MPE/Base/Log.h"
+#include "App.h"
+#include "MPE/Base/Input/Input.h"
+#include "MPE/Renderer/Renderer.h"
+
+// TEMP
+#include <GLFW/glfw3.h>
 
 namespace MPE
 {
@@ -16,6 +19,8 @@ namespace MPE
 		SYS_Window = std::unique_ptr<Window>(Window::Create());
 		SYS_Window->SetEventCallback(MPE_BIND_EVENT_FUNCTION(App::OnEvent));
 
+		Renderer::Init();
+
 		SYS_ImGuiLayer = new ImGuiLayer();
 		PushOverlay(SYS_ImGuiLayer);
 	}
@@ -26,12 +31,17 @@ namespace MPE
 	{
 		while (SYS_Running)
 		{
-			glClearColor(1, 1, 1, 1);
-			glClear(GL_COLOR_BUFFER_BIT);
+			// Platform::GetTime()
+			float time = (float)glfwGetTime();
+			_TIME deltatime = time - SYS_LAST_FRAME_TIME;
+			SYS_LAST_FRAME_TIME = time;
 
-			for (Layer *layer : SYS_LayerStack)
+			if (!SYS_MINIMIZED)
 			{
-				layer->OnUpdate();
+				for (Layer *layer : SYS_LayerStack)
+				{
+					layer->OnUpdate(deltatime);
+				}
 			}
 
 			SYS_ImGuiLayer->Begin();
@@ -46,6 +56,11 @@ namespace MPE
 			// MPE_CORE_ERROR("{0}, {1}", x, y);
 
 			SYS_Window->OnUpdate();
+
+			if (Input::IsKeyPressed(MPE_KEY_ESCAPE))
+			{
+				SYS_Running = false;
+			}
 		}
 	}
 
@@ -53,6 +68,8 @@ namespace MPE
 	{
 		EventDispatcher dispatcher(SYS_Event);
 		dispatcher.Dispatch<WindowCloseEvent>(MPE_BIND_EVENT_FUNCTION(App::OnWindowClose));
+		dispatcher.Dispatch<WindowResizeEvent>(MPE_BIND_EVENT_FUNCTION(App::OnWindowResize));
+
 		for (auto it = SYS_LayerStack.end(); it != SYS_LayerStack.begin();)
 		{
 			(*--it)->OnEvent(SYS_Event);
@@ -77,7 +94,21 @@ namespace MPE
 
 	bool App::OnWindowClose(WindowCloseEvent &e)
 	{
-		SYS_Running = false;
+		Shutdown();
 		return true;
+	}
+
+	bool App::OnWindowResize(WindowResizeEvent &e)
+	{
+		if (e.GetWidth() == 0 || e.GetHeight() == 0)
+		{
+			SYS_MINIMIZED = true;
+			return false;
+		}
+		SYS_MINIMIZED = false;
+
+		Renderer::OnWindowResize(e.GetWidth(), e.GetHeight());
+
+		return false;
 	}
 }

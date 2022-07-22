@@ -1,6 +1,8 @@
 /.vscode/
 /.idea/
 /.vs/
+.gitattributes
 /build/
 /TODO/
-.gitattributes
+/bck/
+/source/Test/

@@ -2,10 +2,10 @@
 
 #include "MPE/MPEPCH.h"
 #include "MPE/Base/Window.h"
-//#include "MPE.h"
-//#include <GL/glew.h>
-//#include <glad/glad.h>
-//#include <GLFW/glfw3.h>
+#include "MPE/Platform/OpenGL/OpenGLContext.h"
+
+#include <glad/glad.h>
+#include <GLFW/glfw3.h>
 
 namespace MPE
 {
@@ -25,11 +25,15 @@ namespace MPE
         bool IsVSync() const override;
 
         inline virtual void *GetNativeWindow() const override { return SYS_Window; }
+
     private:
         virtual void Init(const WindowProps &props);
         virtual void Shutdown();
+
     private:
         GLFWwindow *SYS_Window;
+        OpenGLContext *SYS_Context;
+
         struct WindowData
         {
             std::string Title;

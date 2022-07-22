@@ -1,8 +1,7 @@
 #pragma once
 
-#include "_CORE.h"
-#include "MPE/MPEPCH.h"
-#include "MPE/Events/Event.h"
+#include "MPE/Base/_CORE.h"
+#include "MPE/Base/Events/Event.h"
 
 namespace MPE
 {

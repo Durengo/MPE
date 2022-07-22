@@ -1,9 +1,9 @@
 #include "WindowsWindow.h"
 
 #include "MPE/Base/Log.h"
-#include "MPE/Events/EventApp.h"
-#include "MPE/Events/EventKey.h"
-#include "MPE/Events/EventMouse.h"
+#include "MPE/Base/Events/EventApp.h"
+#include "MPE/Base/Events/EventKey.h"
+#include "MPE/Base/Events/EventMouse.h"
 
 namespace MPE
 {
@@ -46,9 +46,10 @@ namespace MPE
         }
 
         SYS_Window = glfwCreateWindow((int)props.Width, (int)props.Height, SYS_Data.Title.c_str(), nullptr, nullptr);
-        glfwMakeContextCurrent(SYS_Window);
-        int status = gladLoadGLLoader((GLADloadproc)glfwGetProcAddress);
-        MPE_CORE_ASSERT(status, "FAILED TO INITIALIZE GLAD.")
+
+        SYS_Context = new OpenGLContext(SYS_Window);
+        SYS_Context->Init();
+
         glfwSetWindowUserPointer(SYS_Window, &SYS_Data);
         SetVSync(true);
 
@@ -144,7 +145,8 @@ namespace MPE
     void WindowsWindow::OnUpdate()
     {
         glfwPollEvents();
-        glfwSwapBuffers(SYS_Window);
+        SYS_Context->SwapBuffers();
+        // glfwSwapBuffers(SYS_Window);
     }
 
     void WindowsWindow::SetVSync(bool enabled)

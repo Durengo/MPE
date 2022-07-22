@@ -1,6 +1,6 @@
 #pragma once
 
-#include "MPE/Base/Input.h"
+#include "MPE/Base/Input/Input.h"
 
 namespace MPE
 {

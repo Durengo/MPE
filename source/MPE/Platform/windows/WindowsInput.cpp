@@ -3,6 +3,8 @@
 #include "MPE/MPEPCH.h"
 #include "MPE/Base/App.h"
 
+#include <GLFW/glfw3.h>
+
 namespace MPE
 {
 	Input *Input::SYS_Instance = new WindowsInput();

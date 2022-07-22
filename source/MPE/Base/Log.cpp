@@ -1,21 +1,23 @@
+#include "MPE/MPEPCH.h"
 #include "Log.h"
 
 #include "spdlog/sinks/stdout_color_sinks.h"
+#include "spdlog/fmt/ostr.h"
 
 namespace MPE
 {
-    std::shared_ptr<spdlog::logger> Log::s_CoreLogger;
-    std::shared_ptr<spdlog::logger> Log::s_ClientLogger;
+    REF<spdlog::logger> Log::CoreLogger;
+    REF<spdlog::logger> Log::ClientLogger;
 
     void Log::Init()
     {
         spdlog::set_pattern("%^[%T] %n: %v%$");
 
-        s_CoreLogger = spdlog::stdout_color_mt("MPE");
-        s_CoreLogger->set_level(spdlog::level::trace);
+        CoreLogger = spdlog::stdout_color_mt("MPE");
+        CoreLogger->set_level(spdlog::level::trace);
 
-        s_ClientLogger = spdlog::stdout_color_mt("APP");
-        s_ClientLogger->set_level(spdlog::level::trace);
+        ClientLogger = spdlog::stdout_color_mt("APP");
+        ClientLogger->set_level(spdlog::level::trace);
 
         MPE_CORE_WARN("ENGINE LOG INITIALIZED.");
         MPE_WARN("CLIENT LOG INITIALIZED.");

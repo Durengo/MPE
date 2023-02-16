@@ -46,5 +46,6 @@ namespace MPE
         void Reset(float x = 0.0f, float y = 0.0f, float z = 0.0f, float rad = 0.0f, float zoom = 1.0f);
 
         float GetZoomLevel() const { return ZOOM_LEVEL; }
+        glm::vec4 GetBounds() const { return glm::vec4(-ASPECT_RATIO * ZOOM_LEVEL, ASPECT_RATIO * ZOOM_LEVEL, -ZOOM_LEVEL, ZOOM_LEVEL); }
     };
 }

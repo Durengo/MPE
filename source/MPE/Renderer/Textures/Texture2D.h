@@ -8,6 +8,7 @@ namespace MPE
     {
     private:
     public:
+        static REF<Texture2D> Create(uint32_t width, uint32_t height);
         static REF<Texture2D> Create(const std::string &filepath);
     };
 }

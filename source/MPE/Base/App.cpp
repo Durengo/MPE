@@ -6,12 +6,15 @@
 // TEMP
 #include <GLFW/glfw3.h>
 
+// TODO: CHECK WHICH MATH LIBRARY TO USE: GLM VS EIGEN VS ARMADILLO
 namespace MPE
 {
 	App *App::SYS_Instance = nullptr;
 
 	App::App()
 	{
+		MPE_PROFILE_FUNCTION();
+
 		MPE_CORE_ASSERT(!SYS_Instance, "APP ALREADY EXISTS.")
 		SYS_Instance = this;
 

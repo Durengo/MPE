@@ -3,10 +3,24 @@
 #include "MPE/Base/Log.h"
 #include "MPE/Vendor/STB/stb_image.h"
 
-#include <glad/glad.h>
-
 namespace MPE
 {
+    OpenGLTexture2D::OpenGLTexture2D(uint32_t width, uint32_t height)
+        : WIDTH(width), HEIGHT(height)
+    {
+        INTERNAL_FORMAT = GL_RGBA8;
+        DATA_FORMAT = GL_RGBA;
+
+        glCreateTextures(GL_TEXTURE_2D, 1, &SYS_RENDERER_ID);
+        glTextureStorage2D(SYS_RENDERER_ID, 1, INTERNAL_FORMAT, WIDTH, HEIGHT);
+
+        glTextureParameteri(SYS_RENDERER_ID, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+        glTextureParameteri(SYS_RENDERER_ID, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+
+        glTextureParameteri(SYS_RENDERER_ID, GL_TEXTURE_WRAP_S, GL_REPEAT);
+        glTextureParameteri(SYS_RENDERER_ID, GL_TEXTURE_WRAP_T, GL_REPEAT);
+    }
+
     OpenGLTexture2D::OpenGLTexture2D(const std::string &filepath)
         : FILEPATH(filepath)
     {
@@ -36,11 +50,17 @@ namespace MPE
             return;
         }
 
+        INTERNAL_FORMAT = OpenGLInternalFormat;
+        DATA_FORMAT = OpenGLDataFormat;
+
         glCreateTextures(GL_TEXTURE_2D, 1, &SYS_RENDERER_ID);
         glTextureStorage2D(SYS_RENDERER_ID, 1, OpenGLInternalFormat, WIDTH, HEIGHT);
 
         glTextureParameteri(SYS_RENDERER_ID, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
         glTextureParameteri(SYS_RENDERER_ID, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+
+        glTextureParameteri(SYS_RENDERER_ID, GL_TEXTURE_WRAP_S, GL_REPEAT);
+        glTextureParameteri(SYS_RENDERER_ID, GL_TEXTURE_WRAP_T, GL_REPEAT);
 
         glTextureSubImage2D(SYS_RENDERER_ID, 0, 0, 0, WIDTH, HEIGHT, OpenGLDataFormat, GL_UNSIGNED_BYTE, data);
 
@@ -50,6 +70,13 @@ namespace MPE
     OpenGLTexture2D::~OpenGLTexture2D()
     {
         glDeleteTextures(1, &SYS_RENDERER_ID);
+    }
+
+    void OpenGLTexture2D::SetData(void *data, uint32_t size)
+    {
+        uint32_t bpp = DATA_FORMAT == GL_RGBA ? 4 : 3;
+        MPE_CORE_ASSERT(size == WIDTH * HEIGHT * bpp, "DATA IS NOT SET TO ENTIRE TEXTURE");
+        glTextureSubImage2D(SYS_RENDERER_ID, 0, 0, 0, WIDTH, HEIGHT, DATA_FORMAT, GL_UNSIGNED_BYTE, data);
     }
 
     void OpenGLTexture2D::Bind(uint32_t slot) const

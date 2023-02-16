@@ -20,6 +20,18 @@ namespace MPE
         MPE_CORE_ASSERT(status, "FAILED TO INITIALIZE GLAD.")
 
         MPE_CORE_INFO("OpenGL Info:");
+        #ifdef MPE_ENABLE_ASSERTS
+
+            int OpenGLVersionMajor;
+            int OpenGLVersionMinor;
+            glGetIntegerv(GL_MAJOR_VERSION, &OpenGLVersionMajor);
+            glGetIntegerv(GL_MINOR_VERSION, &OpenGLVersionMinor);
+
+            MPE_CORE_ASSERT(OpenGLVersionMajor > 4 || (OpenGLVersionMajor == 4 && OpenGLVersionMinor >= 6), "MPE REQUIRES OPENGL VERSION 4.6 OR GREATER.");
+
+            MPE_CORE_INFO("OpenGL Version: {0}.{1}", OpenGLVersionMajor, OpenGLVersionMinor);
+
+        #endif
         MPE_CORE_INFO("Vendor: {0}", glGetString(GL_VENDOR));
         MPE_CORE_INFO("Renderer: {0}", glGetString(GL_RENDERER));
         MPE_CORE_INFO("Version: {0}", glGetString(GL_VERSION));

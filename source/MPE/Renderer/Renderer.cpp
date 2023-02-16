@@ -1,6 +1,7 @@
 #include "MPE/MPEPCH.h"
 #include "Renderer.h"
 #include "MPE/Platform/OpenGL/Shaders/OpenGLShader.h"
+#include "MPE/Renderer/Renderer2D.h"
 
 namespace MPE
 {
@@ -9,6 +10,7 @@ namespace MPE
     void Renderer::Init()
     {
         RenderPrimitive::Init();
+        Renderer2D::Init();
     }
 
     void Renderer::OnWindowResize(uint32_t width, uint32_t height)

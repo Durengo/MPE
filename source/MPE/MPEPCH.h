@@ -10,6 +10,10 @@
 #include <utility>
 #include <algorithm>
 #include <functional>
+#include <chrono>
+#include <thread>
+#include <stdlib.h>
+#include <random>
 
 // STRING, STRING MANIPULATION, FILE MANIPULATION
 #include <string>
@@ -27,3 +31,9 @@
 #include "MPE/Base/_CORE.h"
 #include "MPE/Base/_TIME.h"
 #include "MPE/Base/Log.h"
+
+// ----- PROFILING -----
+// ONLY FOR DEBUGGING!
+#include "MPE/Debug/Profiling/_TIMER.h"
+#include "MPE/Debug/Profiling/_PROFILING.h"
+// ----- PROFILING -----

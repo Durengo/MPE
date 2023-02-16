@@ -12,6 +12,12 @@
 #include "MPE/Base/_TIME.h"
 // ----- PHYSICS -----
 
+// ----- PROFILING -----
+// ONLY FOR DEBUGGING!
+//#include "MPE/Debug/Profiling/_TIMER.h"
+//#include "MPE/Debug/Profiling/_PROFILING.h"
+// ----- PROFILING -----
+
 // ----- EVENTS -----
 #include "MPE/Base/Events/EventApp.h"
 #include "MPE/Base/Events/EventKey.h"
@@ -30,6 +36,7 @@
 
 // ----- RENDERER -----
 #include "MPE/Renderer/Renderer.h"
+#include "MPE/Renderer/Renderer2D.h"
 #include "MPE/Renderer/RenderPrimitive.h"
 // ----- RENDERER -----
 
@@ -45,8 +52,9 @@
 // ----- CAMERAS -----
 #include "MPE/Renderer/Cameras/OrthographicCamera.h"
 #include "MPE/Renderer/Cameras/OrthographicCameraController.h"
+#include "MPE/Renderer/Cameras/StaticOrthographicCamera.h"
 // ----- CAMERAS -----
 
 //-----Entry Point----
-#include "MPE/Base/EntryPoint.h"
+//#include "MPE/Base/EntryPoint.h"
 //-----Entry Point----

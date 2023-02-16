@@ -8,4 +8,4 @@ set RELPATH=%cd%
 
 echo %RELPATH%
 
-robocopy %RELPATH%\source\Sandbox\Data %RELPATH%\build\Data /e /mir
+(robocopy %RELPATH%\source\Sandbox\Data %RELPATH%\build\Data /e /mir) ^& IF %ERRORLEVEL% LEQ 1 exit 0

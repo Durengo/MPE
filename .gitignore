@@ -1,8 +1,9 @@
 /.vscode/
 /.idea/
 /.vs/
+/.VSCodeCounter/
 .gitattributes
 /build/
 /TODO/
 /bck/
-/source/Test/
+/source/Tests/

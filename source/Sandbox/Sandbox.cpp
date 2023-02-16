@@ -1,11 +1,15 @@
 #include "MPE/MPE.h"
 
+#include "MPE/Base/EntryPoint.h"
+
 // TEMP
 #include "imgui.h"
 #include "MPE/Platform/OpenGL/Shaders/OpenGLShader.h"
 #include "MPE/Renderer/Shaders/ShaderLibrary.h"
 #include <glm/gtc/matrix_transform.hpp>
 #include <glad/glad.h>
+
+#include "Sandbox2D/Sandbox2D.h"
 
 class TestLayer : public MPE::Layer
 {
@@ -313,7 +317,8 @@ class Sandbox : public MPE::App
 public:
     Sandbox()
     {
-        PushLayer(new TestLayer());
+        //PushLayer(new TestLayer());
+        PushLayer(new Sandbox2D());
     }
 
     ~Sandbox()

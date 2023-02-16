@@ -198,10 +198,81 @@ namespace MPE
         glUseProgram(0);
     }
 
+    void OpenGLShader::SetInt1(const std::string &name, int value)
+    {
+        InjectUniformInt1(name, value);
+    }
+
+    void OpenGLShader::SetInt2(const std::string &name, int values[2])
+    {
+        InjectUniformInt2(name, values);
+    }
+
+    void OpenGLShader::SetInt3(const std::string &name, int values[3])
+    {
+        InjectUniformInt3(name, values);
+    }
+
+    void OpenGLShader::SetInt4(const std::string &name, int values[4])
+    {
+        InjectUniformInt4(name, values);
+    }
+
+    void OpenGLShader::SetFloat1(const std::string &name, float value)
+    {
+        InjectUniformFloat1(name, value);
+    }
+
+    void OpenGLShader::SetFloat2(const std::string &name, const glm::vec2 &vector2)
+    {
+        InjectUniformFloat2(name, vector2);
+    }
+
+    void OpenGLShader::SetFloat3(const std::string &name, const glm::vec3 &vector3)
+    {
+        InjectUniformFloat3(name, vector3);
+    }
+
+    void OpenGLShader::SetFloat4(const std::string &name, const glm::vec4 &vector4)
+    {
+        InjectUniformFloat4(name, vector4);
+    }
+
+    void OpenGLShader::SetMat3(const std::string &name, const glm::mat3 &matrix)
+    {
+        InjectUniformMat3(name, matrix);
+    }
+
+    void OpenGLShader::SetMat4(const std::string &name, const glm::mat4 &matrix)
+    {
+        InjectUniformMat4(name, matrix);
+    }
+
     void OpenGLShader::InjectUniformInt1(const std::string &name, int value)
     {
         GLint location = glGetUniformLocation(SYS_Renderer_ID, name.c_str());
         glUniform1i(location, value);
+    }
+
+    void OpenGLShader::InjectUniformInt2(const std::string &name, int values[2])
+    {
+        MPE_CORE_ASSERT(0, "MORE THAN 1 INT IS NOT SUPPORTED");
+        // GLint location = glGetUniformLocation(SYS_Renderer_ID, name.c_str());
+        // glUniform2i(location, values);
+    }
+
+    void OpenGLShader::InjectUniformInt3(const std::string &name, int values[3])
+    {
+        MPE_CORE_ASSERT(0, "MORE THAN 1 INT IS NOT SUPPORTED");
+        // GLint location = glGetUniformLocation(SYS_Renderer_ID, name.c_str());
+        // glUniform3i(location, values);
+    }
+
+    void OpenGLShader::InjectUniformInt4(const std::string &name, int values[4])
+    {
+        MPE_CORE_ASSERT(0, "MORE THAN 1 INT IS NOT SUPPORTED");
+        // GLint location = glGetUniformLocation(SYS_Renderer_ID, name.c_str());
+        // glUniform4i(location, values);
     }
 
     void OpenGLShader::InjectUniformFloat1(const std::string &name, float value)

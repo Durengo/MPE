@@ -30,12 +30,14 @@ find_package(glm CONFIG REQUIRED)
 
 # MPE LIBRARY .CPP FILES.
 file(GLOB_RECURSE MPE_CPP
-                        # /BASE
+                        # /Base
                         "${PROJECT_SOURCE_DIR}/source/MPE/*.cpp"
                         "${PROJECT_SOURCE_DIR}/source/MPE/Base/*.cpp"
                         "${PROJECT_SOURCE_DIR}/source/MPE/Base/Events/*.cpp"
                         "${PROJECT_SOURCE_DIR}/source/MPE/Base/Input/*.cpp"
                         "${PROJECT_SOURCE_DIR}/source/MPE/Base/Layers/*.cpp"
+                        # /Debug
+                        "${PROJECT_SOURCE_DIR}/source/MPE/Debug/Profiling/*.cpp"
                         # /Renderer
                         "${PROJECT_SOURCE_DIR}/source/MPE/Renderer/*.cpp"
                         "${PROJECT_SOURCE_DIR}/source/MPE/Renderer/Cameras/*.cpp"
@@ -55,13 +57,15 @@ file(GLOB_RECURSE MPE_CPP
                         )
 
 # MPE LIBRARY .H FILES.
-file(GLOB RECURSE MPE_H
-                        # /BASE
+file(GLOB_RECURSE MPE_H
+                        # /Base
                         "${PROJECT_SOURCE_DIR}/source/MPE/*.h"
                         "${PROJECT_SOURCE_DIR}/source/MPE/Base/*.h"
                         "${PROJECT_SOURCE_DIR}/source/MPE/Base/Events/*.h"
                         "${PROJECT_SOURCE_DIR}/source/MPE/Base/Input/*.h"
                         "${PROJECT_SOURCE_DIR}/source/MPE/Base/Layers/*.h"
+                        # /Debug
+                        "${PROJECT_SOURCE_DIR}/source/MPE/Debug/Profiling/*.h"
                         # /Renderer
                         "${PROJECT_SOURCE_DIR}/source/MPE/Renderer/*.h"
                         "${PROJECT_SOURCE_DIR}/source/MPE/Renderer/Cameras/*.h"
@@ -117,30 +121,75 @@ if(WIN32)
         target_compile_definitions(MPE PUBLIC MPE_STATIC_LIBRARY)
         target_compile_definitions(MPE PUBLIC MPE_ENABLE_ASSERTS)
 
+        # ENABLE PROFILING FOR DEBUG BUILS.
+        if(CMAKE_BUILD_TYPE STREQUAL Debug)
+                target_compile_definitions(MPE PUBLIC MPE_DEBUG_PROFILING)
+        endif(CMAKE_BUILD_TYPE STREQUAL Debug)
+
         # ADD "SANDBOX" EXECUTABLE - THE ENTRYPOINT TO MPE.
         add_executable(SANDBOX "${PROJECT_SOURCE_DIR}/source/Sandbox/Sandbox.cpp")
-        #add_executable(SANDBOX "${PROJECT_SOURCE_DIR}/source/Sandbox/Example.cpp")
+
         target_include_directories(SANDBOX PUBLIC "${PROJECT_SOURCE_DIR}/source")
         target_link_libraries(SANDBOX PUBLIC MPE)
 
+        # ADDING SANDBOX 2D LAYER.
+        file(GLOB_RECURSE SANDBOX2D_CPP "${PROJECT_SOURCE_DIR}/source/Sandbox/Sandbox2D/*.cpp")
+        file(GLOB_RECURSE SANDBOX2D_H "${PROJECT_SOURCE_DIR}/source/Sandbox/Sandbox2D/*.h")
+        add_library(SANDBOX2D STATIC ${SANDBOX2D_CPP})
+        target_include_directories(SANDBOX2D PUBLIC ${SANDBOX2D_H})
+        target_link_libraries(SANDBOX2D PUBLIC MPE)
+        target_link_libraries(SANDBOX PUBLIC SANDBOX2D)
+
+        #####################################################################################################
+        # TESTS
+        # add_executable(TEST "${PROJECT_SOURCE_DIR}/source/Tests/Unit.cpp")
+
+        # file(GLOB_RECURSE TEST_CPP
+        #                                 "${PROJECT_SOURCE_DIR}/source/Tests/source/*.cpp"
+        #                                 #"${PROJECT_SOURCE_DIR}/source/Tests/source/Primitive/*.cpp"
+        #                                 )
+
+        # file(GLOB_RECURSE TEST_H
+        #                                 "${PROJECT_SOURCE_DIR}/source/Tests/source/*.h"
+        #                                 #"${PROJECT_SOURCE_DIR}/source/Tests/source/Primitive/*.h"
+        #                                 )
+
+        # # add_library(TEST_SRC STATIC ${TEST_CPP})
+        # # target_include_directories(TEST_SRC PUBLIC ${TEST_H})
+        # # target_link_libraries(TEST_SRC PUBLIC MPE)
+        # # target_link_libraries(TEST PUBLIC MPE)
+        # # target_link_libraries(TEST PUBLIC TEST_SRC)
+
+        # target_link_libraries(TEST PUBLIC MPE)
+        # target_include_directories(TEST PUBLIC ${TEST_CPP} ${TEST_H})
+
+        #####################################################################################################
+        # PROJECTS
+        # PONG
+        add_executable(PONG "${PROJECT_SOURCE_DIR}/source/Projects/Pong/ProjectSelector.cpp")
+
+        file(GLOB_RECURSE PONG_CPP
+                                        "${PROJECT_SOURCE_DIR}/source/Projects/Pong/source/*.cpp"
+                                        "${PROJECT_SOURCE_DIR}/source/Projects/Pong/source/Core/*.cpp"
+                                        )
+
+        file(GLOB_RECURSE PONG_H
+                                        "${PROJECT_SOURCE_DIR}/source/Projects/Pong/source/*.h"
+                                        "${PROJECT_SOURCE_DIR}/source/Projects/Pong/source/Core/*.h"
+                                        )
+
+        add_library(PONG_SRC STATIC ${PONG_CPP})
+        target_include_directories(PONG_SRC PUBLIC ${PONG_H})
+        target_link_libraries(PONG_SRC PUBLIC MPE)
+        target_link_libraries(PONG PUBLIC MPE)
+        target_link_libraries(PONG PUBLIC PONG_SRC)
+
+        #####################################################################################################
+
         # COMPILER DEFINITIONS FOR SANDBOX.
         target_compile_definitions(SANDBOX PUBLIC MPE_PLATFORM_WINDOWS)
-
-        # ADD "TEST" EXECUTABLE
-        # file(GLOB RECURSE TEST_H
-        #                         "${PROJECT_SOURCE_DIR}/source/Test/Tests/*.h"
-        #                         "${PROJECT_SOURCE_DIR}/source/Test/Tests/Primitive/*.h"
-        #                         )
-
-        # file(GLOB RECURSE TEST_CPP
-        #                         "${PROJECT_SOURCE_DIR}/source/Test/Tests/*.cpp"
-        #                         "${PROJECT_SOURCE_DIR}/source/Test/Tests/Primitive/*.cpp"
-        #                         )
-
-        # add_executable(TEST "${PROJECT_SOURCE_DIR}/source/Test/Unit.cpp")
-        # target_include_directories(TEST PUBLIC ${TEST_H})
-        # target_include_directories(TEST PUBLIC ${TEST_CPP})
-        # target_link_libraries(TEST PUBLIC MPE)
+        # COMPILER DEFINITIONS FOR SANDBOX 2D.
+        target_compile_definitions(SANDBOX2D PUBLIC MPE_PLATFORM_WINDOWS)
 
 
 endif (WIN32)
@@ -164,19 +213,21 @@ endif(${LIBRARY_STATE} STREQUAL SHARED_LIBRARY)
 
 # DOUBLE CHECKS IF THE SYSTEM IS RUNNING ON WINDOWS-X64 SYSTEM.
 if(NOT CMAKE_SIZEOF_VOID_P EQUAL 8)
-    message("Please switch to x64 build.")
-    return()
+
+        message("MPE SUPPORTS ONLY X64 SYSTEMS.")
+        return()
+
 endif()
 
 if(WIN32)
 
-# ADDING A SCRIPT THAT MIRROS THE FOLDER IN source/Sandbox/Data to build/Data
-add_custom_command(TARGET SANDBOX POST_BUILD
-                   COMMAND ${PROJECT_SOURCE_DIR}/utility/scripts/windows/CPBMDTB.bat)
+        # ADDING A SCRIPT THAT MIRROS THE FOLDER IN source/Sandbox/Data to build/Data
+        add_custom_command(TARGET SANDBOX POST_BUILD
+                           COMMAND ${PROJECT_SOURCE_DIR}/utility/scripts/windows/CPBMDTB.bat)
 
-# THIS MIGHT THROW SOME ERRORS IN CMAKE, BUT IF BUILT AGAIN SHOULD WORK FINE
-add_custom_target(DATASCRIPT COMMAND ${PROJECT_SOURCE_DIR}/utility/scripts/windows/CPBMDTB.bat)
+        # THIS MIGHT THROW SOME ERRORS IN CMAKE, BUT IF BUILT AGAIN SHOULD WORK FINE
+        add_custom_target(DATASCRIPT COMMAND ${PROJECT_SOURCE_DIR}/utility/scripts/windows/CPBMDTB.bat)
 
-add_dependencies(SANDBOX DATASCRIPT)
+        add_dependencies(SANDBOX DATASCRIPT)
 
 endif (WIN32)
